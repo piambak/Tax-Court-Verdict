@@ -6,27 +6,6 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, classification_report
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.datasets import make_regression
-
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
-
-import re
-import nltk
-
-import os
-
 
 # loading in the model to predict on the data 
 pickle_in = open('finalmodel.pkl', 'rb') 
