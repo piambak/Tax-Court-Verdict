@@ -12,7 +12,7 @@ app_mode = st.sidebar.selectbox('Select Page',['Home','Predict_Verdict'])
 if app_mode=='Home':
     st.title('Pengadilan Pajak Verdict')
     st.markdown('Dataset :')
-    df=pd.read_csv('emp_analytics.csv')
+    df=pd.read_csv('https://drive.google.com/file/d/1yBoNaQzLYufzjwWRCHRETRYC8_DKEmrX/view?usp=share_link')
     st.write(df.head())
 
 
