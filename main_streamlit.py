@@ -4,11 +4,11 @@ import numpy as np
 import pickle
 
 # Load the pkl file
-with open('https://drive.google.com/file/d/1LFksueitnRoQ1nIBHjJqrX2Fj9lrSSXQ/view?usp=share_link', 'rb') as f:
+with open('final-model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 # Load the data
-df = pd.read_csv('https://drive.google.com/file/d/1yBoNaQzLYufzjwWRCHRETRYC8_DKEmrX/view?usp=share_link')
+df = pd.read_csv('cropped.csv')
 
 # Create a title and description
 st.title('Machine Learning Dashboard')
