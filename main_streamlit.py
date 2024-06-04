@@ -40,12 +40,12 @@ def main():
 	
 	# the following lines create text boxes in which the user can enter 
 	# the data required to make the prediction 
-	tahun_pajak = st.number_input("Tahun Pajak", "Type Here")
-    tahun_putusan = st.number_input("Tahun Putusan", "Type Here")
-    jenis_pajak = st.selectbox("Jenis Pajak", pd.unique(df["jenis_pajak"]))
-    jenis_gugatan = st.selectbox("Jenis Gugatan", pd.unique(df["jenis_gugatan"]))
-    ketua = st.selectbox("Ketua", pd.unique(df["ketua"]))
-    result ="" 
+	tahun_pajak = st.text_input("Tahun Pajak", "Type Here")
+    	tahun_putusan = st.text_input("Tahun Putusan", "Type Here")
+    	jenis_pajak = st.selectbox("Jenis Pajak", pd.unique(df["jenis_pajak"]))
+    	jenis_gugatan = st.selectbox("Jenis Gugatan", pd.unique(df["jenis_gugatan"]))
+    	ketua = st.selectbox("Ketua", pd.unique(df["ketua"]))
+    	result ="" 
 	
 	# the below line ensures that when the button called 'Predict' is clicked, 
 	# the prediction function defined above is called to make the prediction 
