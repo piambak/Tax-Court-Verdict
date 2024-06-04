@@ -8,7 +8,7 @@ with open('final-model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 # Load the data
-df = pd.read_csv('cropped.csv')
+df = pd.read_csv('https://www.kaggle.com/datasets/sobatbucin/output/putusan_data.csv')
 
 # Create a title and description
 st.title('Machine Learning Dashboard')
