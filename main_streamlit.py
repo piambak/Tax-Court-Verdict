@@ -18,11 +18,11 @@ def main():
     """
     st.markdown(html_temp, unsafe_allow_html = True)
     
-    Tahun Pajak = st.text_input("Tahun Pajak","0")
-    Tahun Putusan = st.text_input("Tahun Putusan","0")
-    Jenis Pajak = st.selectbox("Jenis Pajak", ["PPN & PPnBM", "Bea & Cukai", "PPh Badan", "Pajak Daerah", "PPh Pasal 26", "PPh Pasal 23", "PPh Pasal 4 Ayat (2)", "PPh Pasal 21", "Gugatan", "PBB", "PPh Orang Pribadi", "PPh Pasal 22", "PPh Pasal 15", "PPh Pasal 25", "Lainnya", "BPHTB"]) 
-    Jenis Gugatan = st.selectbox("Education",["Banding","Peninjauan Kembali","Gugatan"]) 
-    Hakim Ketua = st.selectbox("Occupation",["Dr. H. Yulius, S.H., M.H.","Drs. R. Arief Boediman, S.H., M.M., M.H.","Widayatno Sastrohardjono, S.H., M.Sc.","Dr. H. M. Hary Djatmiko, S.H., M.S.","Dr. Irfan Fachruddin, S.H., C.N.","Dr. Triyono Martanto, 5.H., 5.E., Ak., M.M., M.","IGN Mayun Winangun, S.H., L.L.M.","Wishnoe Saleh Thaib, S.H., M .H., M.Sc., Ak., CA.","Ali Hakim, S.H., SE., Ak., Msi., Ca.","Widayatno Sastrohardjono, S.H., S.Mc."]) 
+    Tahun_Pajak = st.text_input("Tahun Pajak","0")
+    Tahun_Putusan = st.text_input("Tahun Putusan","0")
+    Jenis_Pajak = st.selectbox("Jenis Pajak", ["PPN & PPnBM", "Bea & Cukai", "PPh Badan", "Pajak Daerah", "PPh Pasal 26", "PPh Pasal 23", "PPh Pasal 4 Ayat (2)", "PPh Pasal 21", "Gugatan", "PBB", "PPh Orang Pribadi", "PPh Pasal 22", "PPh Pasal 15", "PPh Pasal 25", "Lainnya", "BPHTB"]) 
+    Jenis_Gugatan = st.selectbox("Education",["Banding","Peninjauan Kembali","Gugatan"]) 
+    Hakim_Ketua = st.selectbox("Occupation",["Dr. H. Yulius, S.H., M.H.","Drs. R. Arief Boediman, S.H., M.M., M.H.","Widayatno Sastrohardjono, S.H., M.Sc.","Dr. H. M. Hary Djatmiko, S.H., M.S.","Dr. Irfan Fachruddin, S.H., C.N.","Dr. Triyono Martanto, 5.H., 5.E., Ak., M.M., M.","IGN Mayun Winangun, S.H., L.L.M.","Wishnoe Saleh Thaib, S.H., M .H., M.Sc., Ak., CA.","Ali Hakim, S.H., SE., Ak., Msi., Ca.","Widayatno Sastrohardjono, S.H., S.Mc."]) 
     
     if st.button("Predict"): 
         features = [[tahun_pajak,tahun_putusan,jenis_pajak,jenis_gugatan,ketua]]
