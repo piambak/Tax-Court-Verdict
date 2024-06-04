@@ -1,62 +1,58 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import pickle
+import pandas as pd 
+import numpy as np 
+import pickle 
+import streamlit as st 
+from PIL import Image 
 
-# Load the pkl file
-with open('final-model.pkl', 'rb') as f:
-    model = pickle.load(f)
+# loading in the model to predict on the data 
+pickle_in = open('final-model.pkl', 'rb') 
+classifier = pickle.load(pickle_in) 
 
-# Load the data
-df = pd.read_csv('https://www.kaggle.com/datasets/sobatbucin/output/putusan_data.csv')
+def welcome(): 
+	return 'welcome all'
 
-# Create a title and description
-st.title('Machine Learning Dashboard')
-st.markdown('This dashboard uses a machine learning model to predict outcomes.')
+# defining the function which will make the prediction using 
+# the data which the user inputs 
+def prediction(tahun_pajak, tahun_putusan, jenis_pajak, jenis_gugatan, ketua): 
 
-# Create filters for the control variables
-tahun_pajak_filter = st.selectbox("Select Tahun Pajak", pd.unique(df["tahun_pajak"]))
-tahun_putusan_filter = st.selectbox("Select Tahun Putusan", pd.unique(df["tahun_putusan"]))
-jenis_pajak_filter = st.selectbox("Select Jenis Pajak", pd.unique(df["jenis_pajak"]))
-jenis_gugatan_filter = st.selectbox("Select Jenis Gugatan", pd.unique(df["jenis_gugatan"]))
-ketua_filter = st.selectbox("Select Ketua", pd.unique(df["ketua"]))
+	prediction = classifier.predict( 
+		[[tahun_pajak, tahun_putusan, jenis_pajak, jenis_gugatan, ketua]]) 
+	print(prediction) 
+	return prediction 
+	
 
-# Filter the data
-df = df[(df["tahun_pajak"] == tahun_pajak_filter) &
-        (df["tahun_putusan"] == tahun_putusan_filter) &
-        (df["jenis_pajak"] == jenis_pajak_filter) &
-        (df["jenis_gugatan"] == jenis_gugatan_filter) &
-        (df["ketua"] == ketua_filter)]
-
-# Create KPIs/summary cards
-kpi1, kpi2, kpi3 = st.columns(3)
-kpi1.metric(label="Mean Hasil Putusan", value=df["hasil_putusan"].mean())
-kpi2.metric(label="Count", value=df.shape[0])
-kpi3.metric(label="Hasil Putusan Distribution", value=df["hasil_putusan"].value_counts())
-
-# Create a data table
-st.markdown("### Detailed Data View")
-st.dataframe(df)
-
-# Create a prediction function
-def predict(input_data):
-    return model.predict(input_data)
-
-# Create a form to input data
-st.markdown("### Make a Prediction")
-with st.form("prediction_form"):
-    tahun_pajak = st.number_input("Tahun Pajak")
-    tahun_putusan = st.number_input("Tahun Putusan")
+# this is the main function in which we define our webpage 
+def main(): 
+	# giving the webpage a title 
+	st.title("Tax Verdict Prediction") 
+	
+	# here we define some of the front end elements of the web page like 
+	# the font and background color, the padding and the text to be displayed 
+	html_temp = """ 
+	<div style ="background-color:yellow;padding:13px"> 
+	<h1 style ="color:black;text-align:center;">Streamlit Iris Flower Classifier ML App </h1> 
+	</div> 
+	"""
+	
+	# this line allows us to display the front end aspects we have 
+	# defined in the above code 
+	st.markdown(html_temp, unsafe_allow_html = True) 
+	
+	# the following lines create text boxes in which the user can enter 
+	# the data required to make the prediction 
+	tahun_pajak = st.number_input("Tahun Pajak", "Type Here")
+    tahun_putusan = st.number_input("Tahun Putusan", "Type Here")
     jenis_pajak = st.selectbox("Jenis Pajak", pd.unique(df["jenis_pajak"]))
     jenis_gugatan = st.selectbox("Jenis Gugatan", pd.unique(df["jenis_gugatan"]))
     ketua = st.selectbox("Ketua", pd.unique(df["ketua"]))
-    submit_button = st.form_submit_button("Make Prediction")
-
-    if submit_button:
-        input_data = pd.DataFrame({'tahun_pajak': [tahun_pajak], 
-                                   'tahun_putusan': [tahun_putusan], 
-                                   'jenis_pajak': [jenis_pajak], 
-                                   'jenis_gugatan': [jenis_gugatan], 
-                                   'ketua': [ketua]})
-        prediction = predict(input_data)
-        st.write("Prediction:", prediction)
+    result ="" 
+	
+	# the below line ensures that when the button called 'Predict' is clicked, 
+	# the prediction function defined above is called to make the prediction 
+	# and store it in the variable result 
+	if st.button("Predict"): 
+		result = prediction(tahun_pajak, tahun_putusan, jenis_pajak, jenis_gugatan, ketua) 
+	st.success('The output is {}'.format(result)) 
+	
+if __name__=='__main__': 
+	main() 
