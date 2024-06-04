@@ -1,56 +1,62 @@
-import numpy as np
+import streamlit as st
 import pandas as pd
-import streamlit as st 
-from sklearn import preprocessing
+import numpy as np
 import pickle
 
-model = pickle.load(open('final-model.pkl', 'rb'))
-encoder_dict = pickle.load(open('encoder.pkl', 'rb')) 
-cols=['age','workclass','education','marital-status','occupation','relationship','race','gender','capital-gain','capital-loss',
-      'hours-per-week','native-country']    
-  
-def main(): 
-    st.title("Income Predictor")
-    html_temp = """
-    <div style="background:#025246 ;padding:10px">
-    <h2 style="color:white;text-align:center;">Income Prediction App </h2>
-    </div>
-    """
-    st.markdown(html_temp, unsafe_allow_html = True)
-    
-    Tahun_Pajak = st.text_input("Tahun Pajak","0")
-    Tahun_Putusan = st.text_input("Tahun Putusan","0")
-    Jenis_Pajak = st.selectbox("Jenis Pajak", ["PPN & PPnBM", "Bea & Cukai", "PPh Badan", "Pajak Daerah", "PPh Pasal 26", "PPh Pasal 23", "PPh Pasal 4 Ayat (2)", "PPh Pasal 21", "Gugatan", "PBB", "PPh Orang Pribadi", "PPh Pasal 22", "PPh Pasal 15", "PPh Pasal 25", "Lainnya", "BPHTB"]) 
-    Jenis_Gugatan = st.selectbox("Education",["Banding","Peninjauan Kembali","Gugatan"]) 
-    Hakim_Ketua = st.selectbox("Occupation",["Dr. H. Yulius, S.H., M.H.","Drs. R. Arief Boediman, S.H., M.M., M.H.","Widayatno Sastrohardjono, S.H., M.Sc.","Dr. H. M. Hary Djatmiko, S.H., M.S.","Dr. Irfan Fachruddin, S.H., C.N.","Dr. Triyono Martanto, 5.H., 5.E., Ak., M.M., M.","IGN Mayun Winangun, S.H., L.L.M.","Wishnoe Saleh Thaib, S.H., M .H., M.Sc., Ak., CA.","Ali Hakim, S.H., SE., Ak., Msi., Ca.","Widayatno Sastrohardjono, S.H., S.Mc."]) 
-    
-    if st.button("Predict"): 
-        features = [[tahun_pajak,tahun_putusan,jenis_pajak,jenis_gugatan,ketua]]
-        data = {'Tahun Pajak': int(tahun_pajak), 'Tahun Putusan': int(tahun_putusan), 'Jenis Pajak': jenis_pajak, 'Jenis_gugatan': jenis_gugatan, 'Hakim Ketua': ketua}
-        print(data)
-        df=pd.DataFrame([list(data.values())], columns=['age','workclass','education','maritalstatus','occupation','relationship','race','gender','capitalgain','capitalloss','hoursperweek','nativecountry'])
-                
-        category_col =['workclass', 'education', 'maritalstatus', 'occupation', 'relationship', 'race', 'gender', 'nativecountry']
-        for cat in encoder_dict:
-            for col in df.columns:
-                le = preprocessing.LabelEncoder()
-                if cat == col:
-                    le.classes_ = encoder_dict[cat]
-                    for unique_item in df[col].unique():
-                        if unique_item not in le.classes_:
-                            df[col] = ['Unknown' if x == unique_item else x for x in df[col]]
-                    df[col] = le.transform(df[col])
-            
-        features_list = df.values.tolist()      
-        prediction = model.predict(features_list)
-    
-        output = int(prediction[0])
-        if output == 1:
-            text = ">50K"
-        else:
-            text = "<=50K"
+# Load the pkl file
+with open('https://drive.google.com/file/d/1LFksueitnRoQ1nIBHjJqrX2Fj9lrSSXQ/view?usp=share_link', 'rb') as f:
+    model = pickle.load(f)
 
-        st.success('Employee Income is {}'.format(text))
-      
-if __name__=='__main__': 
-    main()
+# Load the data
+df = pd.read_csv('https://drive.google.com/file/d/1yBoNaQzLYufzjwWRCHRETRYC8_DKEmrX/view?usp=share_link')
+
+# Create a title and description
+st.title('Machine Learning Dashboard')
+st.markdown('This dashboard uses a machine learning model to predict outcomes.')
+
+# Create filters for the control variables
+tahun_pajak_filter = st.selectbox("Select Tahun Pajak", pd.unique(df["tahun_pajak"]))
+tahun_putusan_filter = st.selectbox("Select Tahun Putusan", pd.unique(df["tahun_putusan"]))
+jenis_pajak_filter = st.selectbox("Select Jenis Pajak", pd.unique(df["jenis_pajak"]))
+jenis_gugatan_filter = st.selectbox("Select Jenis Gugatan", pd.unique(df["jenis_gugatan"]))
+ketua_filter = st.selectbox("Select Ketua", pd.unique(df["ketua"]))
+
+# Filter the data
+df = df[(df["tahun_pajak"] == tahun_pajak_filter) &
+        (df["tahun_putusan"] == tahun_putusan_filter) &
+        (df["jenis_pajak"] == jenis_pajak_filter) &
+        (df["jenis_gugatan"] == jenis_gugatan_filter) &
+        (df["ketua"] == ketua_filter)]
+
+# Create KPIs/summary cards
+kpi1, kpi2, kpi3 = st.columns(3)
+kpi1.metric(label="Mean Hasil Putusan", value=df["hasil_putusan"].mean())
+kpi2.metric(label="Count", value=df.shape[0])
+kpi3.metric(label="Hasil Putusan Distribution", value=df["hasil_putusan"].value_counts())
+
+# Create a data table
+st.markdown("### Detailed Data View")
+st.dataframe(df)
+
+# Create a prediction function
+def predict(input_data):
+    return model.predict(input_data)
+
+# Create a form to input data
+st.markdown("### Make a Prediction")
+with st.form("prediction_form"):
+    tahun_pajak = st.number_input("Tahun Pajak")
+    tahun_putusan = st.number_input("Tahun Putusan")
+    jenis_pajak = st.selectbox("Jenis Pajak", pd.unique(df["jenis_pajak"]))
+    jenis_gugatan = st.selectbox("Jenis Gugatan", pd.unique(df["jenis_gugatan"]))
+    ketua = st.selectbox("Ketua", pd.unique(df["ketua"]))
+    submit_button = st.form_submit_button("Make Prediction")
+
+    if submit_button:
+        input_data = pd.DataFrame({'tahun_pajak': [tahun_pajak], 
+                                   'tahun_putusan': [tahun_putusan], 
+                                   'jenis_pajak': [jenis_pajak], 
+                                   'jenis_gugatan': [jenis_gugatan], 
+                                   'ketua': [ketua]})
+        prediction = predict(input_data)
+        st.write("Prediction:", prediction)
